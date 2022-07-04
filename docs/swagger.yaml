@@ -1,0 +1,232 @@
+definitions:
+  dto.CustomerDetailDTO:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      point:
+        type: integer
+      username:
+        type: string
+    type: object
+  dto.CustomerLoginDTO:
+    properties:
+      accessToken:
+        type: string
+      accessUuid:
+        type: string
+      address:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      refreshToken:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.LoginDetail:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.PurchaseVoucherRequestDTO:
+    properties:
+      voucherGroupId:
+        type: integer
+    type: object
+  dto.RefreshToken:
+    properties:
+      refreshToken:
+        type: string
+    type: object
+  dto.UserLoginDTO:
+    properties:
+      accessToken:
+        type: string
+      accessUuid:
+        type: string
+      address:
+        type: string
+      deposit:
+        type: number
+      email:
+        type: string
+      firstLogin:
+        type: boolean
+      name:
+        type: string
+      phone:
+        type: string
+      refreshToken:
+        type: string
+      userId:
+        type: integer
+      username:
+        type: string
+      whatsapp:
+        type: string
+    type: object
+  dto.VoucherGroupDTO:
+    properties:
+      id:
+        type: integer
+      qty:
+        type: integer
+      voucherGroupName:
+        type: string
+    type: object
+  dto.VoucherPurchaseDTO:
+    properties:
+      customerId:
+        type: integer
+      customerName:
+        type: string
+      id:
+        type: integer
+      purchaseDate:
+        type: string
+      voucherCode:
+        type: string
+      voucherGroupId:
+        type: integer
+      voucherGroupName:
+        type: string
+    type: object
+  helper.Response:
+    properties:
+      data: {}
+      errors: {}
+      message:
+        type: string
+      status:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: This is a microservice jwt-auth.
+  title: Swagger API Notification
+  version: "1.0"
+paths:
+  /customer/detail:
+    get:
+      consumes:
+      - application/json
+      description: Get Customer Detail
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CustomerDetailDTO'
+      security:
+      - BearerToken: []
+      summary: Get Customer Detail
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: Login
+        in: body
+        name: Login
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginDetail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CustomerLoginDTO'
+              type: object
+      summary: Login
+  /token/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh Access Token
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: RefreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.UserLoginDTO'
+              type: object
+      summary: Refresh Access Token
+  /voucher-group:
+    get:
+      consumes:
+      - application/json
+      description: Voucher Group List
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.VoucherGroupDTO'
+            type: array
+      summary: Voucher Group List
+  /voucher-purchase:
+    post:
+      consumes:
+      - application/json
+      description: Purchase Voucher
+      parameters:
+      - description: Voucher Group ID
+        in: body
+        name: Finance
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PurchaseVoucherRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.VoucherPurchaseDTO'
+      security:
+      - BearerToken: []
+      summary: Purchase Voucher
+securityDefinitions:
+  BearerToken:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

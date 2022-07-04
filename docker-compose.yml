@@ -1,0 +1,42 @@
+version: "3"
+services:
+    jwt-auth:
+        image: jwt-auth
+        restart: always
+        networks:
+          - staging-network
+        ports:
+          - "8080:8080"
+        environment:
+          - DB_HOST=db
+          - LOG_FILE_PATH=/home/log
+        depends_on:
+          - db
+    db:
+        container_name: mysql
+        image: mysql:latest
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        volumes:
+          - '/home/data/mysql:/var/lib/mysql'
+        networks:
+          - staging-network
+        ports:
+          - "3307:3306"
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+        command: --sql_mode=""
+          
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        networks:
+          - staging-network
+        ports:
+          - 8081:80
+        environment:
+          - PMA_ARBITRARY=1
+
+networks:
+  staging-network:
+    external: true
